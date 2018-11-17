@@ -1,0 +1,19 @@
+diff -ura alsa-lib-1.1.7/src/pcm/interval_inline.h alsa-lib-1.1.7/src/pcm/interval_inline.h
+--- alsa-lib-1.1.7/src/pcm/interval_inline.h	2018-10-16 11:08:35.000000000 +0300
++++ alsa-lib-1.1.7/src/pcm/interval_inline.h	2018-11-17 21:52:56.222261619 +0300
+@@ -51,12 +51,14 @@
+ {
+ 	assert(!snd_interval_empty(i));
+ 	return (i->min == i->max || 
+-		(i->min + 1 == i->max && i->openmax));
++		(i->min + 1 == i->max && (i->openmin || i->openmax)));
+ }
+ 
+ INTERVAL_INLINE int snd_interval_value(const snd_interval_t *i)
+ {
+ 	assert(snd_interval_single(i));
++	if (i->openmin && !i->openmax)
++		return i->max;
+ 	return i->min;
+ }
+ 
